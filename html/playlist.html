@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/playList.js" type="module"></script>
+    <title>Document</title>
+</head>
+<body>
+    <!-- 플레이리스트 추가(여러개도 가능) -->
+    <!-- 배열로 저장 -->
+    <!-- 플레이리스트에 제목 추가 -->
+    <div>
+        <h3>my play list</h3>
+        <input type="file" accept="audio/*" multiple id="audioFile">
+        <button id="addBtn" >add</button>
+    </div>
+    <ul id="playListUl"></ul>
+    <audio id="audio" controls></audio>
+</body>
+</html> 
