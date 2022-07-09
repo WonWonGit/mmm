@@ -67,8 +67,18 @@ export class PlayList{
         this.playListUl.removeChild(this.playListUl.firstChild);
         }
        allIndexedPlayList.forEach(playList => {
-            this.playListUl.insertAdjacentHTML('beforeend', `<li>${playList.name}</li>`);
+            this.playListUl.insertAdjacentHTML('beforeend', `<li>${playList.name}<button id='${playList.id}'>delete</button></li>`);
+            document.getElementById(`${playList.id}`).addEventListener('click',(event)=>{this.playListDelete(event.target.id)});
         })
+    }
+
+    async playListDelete(id){
+        const deleteResult = await indexedDB.playListDelete(id);
+        if(deleteResult === 200){
+            this.getAllPlayList();
+        }else{
+            alert('something happen!');
+        }
     }
 
 }
@@ -79,92 +89,3 @@ window.onload = () => {
 
 
 }
-
-
-// uploadDocuments = async (event, files) => {
-//     const filePromises = files.map((file) => {
-//       // Return a promise per file
-//       return new Promise((resolve, reject) => {
-//         const reader = new FileReader();
-//         reader.onload = async () => {
-//           try {
-//             const response = await this.submitFile(
-//               reader.result,
-//               file.name,
-//               fileType
-//             );
-//             // Resolve the promise with the response value
-//             resolve(response);
-//           } catch (err) {
-//             reject(err);
-//           }
-//         };
-//         reader.onerror = (error) => {
-//           reject(error);
-//         };
-//         reader.readAsDataURL(file);
-//       });
-//     });
-  
-//     // Wait for all promises to be resolved
-//     const fileInfos = await Promise.all(filePromises);
-  
-//     console.log('COMPLETED');
-  
-//     // Profit
-//     return fileInfos;
-//   };
-//   Share
-  
-
-// const fileToBlob = () => {
-
-    // files.map(file => {
-    //     const reader = new FileReader();
-
-    //     reader.onload = () => {
-    //         var dataURL = reader.result;
-    //         playList.push({name: file.name, src : dataURL});
-    //     };
-
-    //     reader.readAsDataURL(file);
-    // });
-
-    // console.log(playList);
-
-    // localStorage.setItem('playList', JSON.stringify(playList));
-
-    // console.log(localStorage.getItem('playList'));
-// }
-
-// const filesUpload = (event) => {
-//     const fileArr = Array.from(event.target.files);
-//     fileArr.forEach(file => files.push(file));
-//     // localStorage.setItem('playList', JSON.stringify(files));
-//     // files = event.target.files;
-//     // console.log(document.getElementById('audioFile').value);
-// }
-
-// const addAudio = () => {
-//     const audioInput = document.getElementById('audioFile');
-//         if(audioInput.value === ''){
-//             alert('파일 선택해주세요')
-//         }else{
-//            fileToBlob(); 
-//         }  
-// }
-
-
-
-    // function fileUpload(event){
-    //     let file = event.target.files[0];
-    //     let reader = new FileReader();
-
-    //     reader.onload = function(){
-    //         var dataURL = reader.result;
-    //         var output = document.getElementById('test');
-    //         output.src = dataURL;
-    //         localStorage.setItem('test',dataURL);
-    //     };
-    //     reader.readAsDataURL(file);
-    // }

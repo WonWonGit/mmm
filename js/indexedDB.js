@@ -4,7 +4,7 @@ export class IndexedDB {
   constructor(playList) {
     this.playList = playList;
     this.allPalyList = [];
-    this.audio = document.getElementById('audio');
+    this.audio = document.getElementById("audio");
 
     const idxedDB = window.indexedDB;
 
@@ -31,28 +31,28 @@ export class IndexedDB {
     return this.allPalyList;
   }
 
-   writeIdxedDB(audios) {
+  async writeIdxedDB(audios) {
     const request = window.indexedDB.open("mmm");
 
     request.onerror = (e) => {
-        alert("DataBase error", e.target.errorCode)
+      alert("DataBase error", e.target.errorCode);
     };
 
     request.onsuccess = (e) => {
-        const db = e.target.result;
-        //transaction : 본격적으로 db 사용하겠다 그런느낌?
-        //['테이블명','readwrite']
-        const transaction = db
+      let playListLength = 0;
+      const db = e.target.result;
+      //transaction : 본격적으로 db 사용하겠다 그런느낌?
+      //['테이블명','readwrite']
+      const transaction = db
         .transaction(["mmmAudio"], "readwrite")
         .objectStore("mmmAudio");
 
-        audios.forEach((audio) => {
-            transaction.add(audio);
-        });
+      audios.forEach((audio) => {
+        console.log("ttt");
+        transaction.add(audio);
+      });
     };
-
-}
-  
+  }
 
   async getAllIndexedPlayList() {
     return new Promise((resolve, reject) => {
@@ -74,17 +74,37 @@ export class IndexedDB {
           if (cursor) {
             const value = objStore.get(cursor.key); // 3. 커서를 사용해 데이터 접근
             value.onsuccess = (e) => {
-                allPalyListArr.push(e.target.result);
-                this.audio.src = e.target.result.src;    
-                console.log(this.audio);
+              allPalyListArr.push({ ...e.target.result, id: cursor.key });
+              // this.audio.src = e.target.result.src;
             };
             cursor.continue(); // 4. cursor로 순회
-          }else{
-              this.setAllPlayList(allPalyListArr);
-              resolve(this.getAllPlayList());
+          } else {
+            this.setAllPlayList(allPalyListArr);
+            resolve(this.getAllPlayList());
           }
         };
       };
     }).then((result) => result);
+  }
+
+  async playListDelete(key) {
+    return new Promise((resolve, reject) => {
+      const request = window.indexedDB.open("mmm"); // 1. db 열기
+      request.onerror = (e) => console.log(e.target.errorCode);
+
+      request.onsuccess = (e) => {
+        const db = request.result;
+        const transaction = db.transaction("mmmAudio", "readwrite");
+        transaction.onerror = (e) => reject(console.log("fail"));
+        transaction.oncomplete = (e) => console.log("success");
+
+        const objStore = transaction.objectStore("mmmAudio"); // 2. name 저장소 접근
+        const objStoreRequest = objStore.delete(parseInt(key)); // 3. 삭제하기
+        objStoreRequest.onsuccess = (e) => {
+          console.log('delete DONE!!');
+          resolve(200);
+        };
+      };
+    }).then(result => {return result});
   }
 }
