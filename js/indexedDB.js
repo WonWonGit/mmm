@@ -39,10 +39,7 @@ export class IndexedDB {
     };
 
     request.onsuccess = (e) => {
-      let playListLength = 0;
       const db = e.target.result;
-      //transaction : 본격적으로 db 사용하겠다 그런느낌?
-      //['테이블명','readwrite']
       const transaction = db
         .transaction(["mmmAudio"], "readwrite")
         .objectStore("mmmAudio");
