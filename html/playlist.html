@@ -6,17 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/js/playList.js" type="module"></script>
     <title>Document</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/playlist.css">
 </head>
 <body>
+    <nav>
+        <div class="menu-btn">
+            <div class="line line--1"></div>
+            <div class="line line--2"></div>
+            <div class="line line--3"></div>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="link">Home</a>
+            <a href="playlist.html" class="link">Playlist</a>
+            <a href="about.html" class="link">about</a>
+        </div>
+    </nav>
+
+
     <!-- 플레이리스트 추가(여러개도 가능) -->
     <!-- 배열로 저장 -->
     <!-- 플레이리스트에 제목 추가 -->
-    <div>
-        <h3>my play list</h3>
-        <input type="file" accept="audio/*" multiple id="audioFile">
-        <button id="addBtn" >add</button>
+    <div class="playlist">
+        <div>
+            <h3>my play list</h3>
+            <input type="file" accept="audio/*" multiple id="audioFile">
+            <button id="addBtn" >add</button>
+        </div>
+        <ul id="playListUl"></ul>
+        <audio id="audio" controls></audio>
     </div>
-    <ul id="playListUl"></ul>
-    <audio id="audio" controls></audio>
+    <script src="../js/nav.js"></script>
 </body>
 </html> 
