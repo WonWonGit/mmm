@@ -8,7 +8,20 @@ class App{
         this.ctx = this.canvas.getContext('2d');
         document.body.appendChild(this.canvas);
 
+        // this.leftCanvas = document.createElement('canvas');
+        // this.leftCanvas.className = 'leftCanvas';
+        // this.leftCtx = this.leftCanvas.getContext('2d');
+        // document.body.appendChild(this.leftCanvas);
+
+        // this.rightCanvas = document.createElement('canvas');
+        // this.rightCanvas.className = 'rightCanvas';
+        // this.rightCtx = this.rightCanvas.getContext('2d');
+        // document.body.appendChild(this.rightCanvas);
+
         this.audioControl = new AudioControl(playList, this.ctx);
+
+
+        // this.audioControl = new AudioControl(playList);
 
         window.addEventListener('resize', this.resize.bind(this), {
             once: false,
@@ -42,7 +55,6 @@ window.onload = () => {
         indexedDB.getAllIndexedPlayList()
                        .then(result => {
                         const app = new App(result);
-               
                        });
     }).catch(e => {
         console.error(`Audio permissions denied: ${e}`);
