@@ -3,7 +3,7 @@
 body{
     /* 임시 bg */
     /* background-image: radial-gradient(circle 248px at center, #16d9e3 0%, #30c7ec 47%, #46aef7 100%); */
-    background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+    background: linear-gradient(-45deg, #FDC094, #FF9190, #5E72EB, #0B0742);
     background-size: 400% 400%;
     animation:  changeColor 10s ease-in-out infinite;
 }
@@ -143,6 +143,11 @@ nav .nav-links .link:hover {
   font-style: italic;
   letter-spacing: 5px;
   transition : all 400ms ease;
+  z-index: 999;
+}
+
+.inform:hover{
+    cursor: pointer;
 }
 
 .support{

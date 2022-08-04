@@ -24,6 +24,9 @@ export class AudioControl {
     this.currentName = '';
 
 
+    this.informBtn = document.getElementById("informBtn");
+    this.informBtn.addEventListener("click", (e) => this.startMusic(e));
+
     this.startBtn = document.getElementById("start");
     this.startBtn.addEventListener("click", (e) => this.startMusic(e));
 
