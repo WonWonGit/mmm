@@ -76,8 +76,8 @@ export class IndexedDB {
             };
             cursor.continue(); // 4. cursor로 순회
           } else {
-            this.setAllPlayList(allPalyListArr);
-            resolve(this.getAllPlayList());
+              this.setAllPlayList(allPalyListArr);
+              resolve(this.getAllPlayList());
           }
         };
       };

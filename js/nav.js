@@ -4,10 +4,12 @@ var lineOne = document.querySelector('nav .menu-btn .line--1');
 var lineTwo = document.querySelector('nav .menu-btn .line--2');
 var lineThree = document.querySelector('nav .menu-btn .line--3');
 var link = document.querySelector('nav .nav-links');
+var control = document.querySelector('.control');
 menuBtn.addEventListener('click', () => {
     nav.classList.toggle('nav-open');
     lineOne.classList.toggle('line-cross');
     lineTwo.classList.toggle('line-fade-out');
     lineThree.classList.toggle('line-cross');
     link.classList.toggle('fade-in');
+    control.classList[1] == 'fade-in' ? control.classList = 'control fade-out' : control.classList = 'control fade-in';
 })
