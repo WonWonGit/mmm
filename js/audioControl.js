@@ -49,10 +49,12 @@ export class AudioControl {
       if (this.index < this.plyaListLength - 1) {
         this.index += 1;
         this.audio.src = this.getPlayList()[this.index].src;
+        this.currentSong.innerHTML = this.getPlayList()[this.index].name;
         this.audio.play();
       } else {
         this.index = 0;
         this.audio.src = this.getPlayList()[index].src;
+        this.currentSong.innerHTML = this.getPlayList()[this.index].name;
         this.audio.play();
       }
     });
@@ -79,6 +81,7 @@ export class AudioControl {
         this.modal.id = 'show';
       } else {
         this.audio.src = this.getPlayList()[this.index].src;
+        console.log(this.getPlayList()[this.index].name)
         this.currentSong.innerHTML = this.getPlayList()[this.index].name;
         this.audio.currentTime = this.currentTime;
         this.startBtn.style.display = "none";
