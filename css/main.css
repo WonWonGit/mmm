@@ -8,7 +8,7 @@ body{
     animation:  changeColor 10s ease-in-out infinite; */
 }
 
-.backgroud{
+.background{
     width: 100%;
     height: 100%;
     /* position: absolute; */
@@ -16,6 +16,30 @@ body{
 
 .primary-color{
     background: linear-gradient(-45deg, #FDC094, #FF9190, #5E72EB, #0B0742);
+    background-size: 400% 400%; 
+    animation:  changeColor 10s ease-in-out infinite;
+}
+
+.green-color{
+    background: linear-gradient(-45deg, #2C6975, #68B2A0, #CDE0C9, #E0ECDE);
+    background-size: 400% 400%; 
+    animation:  changeColor 10s ease-in-out infinite;
+}
+
+.orange-color{
+    background: linear-gradient(-45deg, #DF825F, #F8956F, #4D446F, #706695);
+    background-size: 400% 400%; 
+    animation:  changeColor 10s ease-in-out infinite; 
+}
+
+.vivid-color{
+    background: linear-gradient(-45deg, #35BBCA, #0191B4, #D3DD18, #FE7A15);
+    background-size: 400% 400%; 
+    animation:  changeColor 10s ease-in-out infinite;
+}
+
+.pastel-color{
+    background: linear-gradient(-45deg, #AAC9CE, #B6B4C2, #E5C1CD, #F3DBCF);
     background-size: 400% 400%; 
     animation:  changeColor 10s ease-in-out infinite;
 }
@@ -191,10 +215,29 @@ nav .nav-links .mode .palette{
     height: 50px;
     opacity: 0.8;
     border-radius: 100%;
+    cursor: pointer;
+}
+
+nav .nav-links .mode .palette:hover{
+    transform: scale(1.2);
+    transition: .2s ease-in-out;
+}
+
+nav .nav-links .mode .palette svg{
+    fill: rgba(0,0,0,0.4);
+}
+
+.check{
+    visibility: hidden;
+}
+
+.choose{
+    visibility: visible;
 }
 
 nav .nav-links .mode .primary{
     background: linear-gradient(-45deg, #FDC094, #FF9190, #5E72EB, #0B0742);
+    /* background-image: url(/icon/circle-check-solid.svg); */
 }
 
 nav .nav-links .mode .green{

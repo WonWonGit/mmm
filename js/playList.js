@@ -1,4 +1,5 @@
 import {IndexedDB} from './indexedDB.js';
+import {BgControl} from './bgControl.js';
 
 let playList;
 let indexedDB;
@@ -86,6 +87,8 @@ export class PlayList{
 window.onload = () => {
     indexedDB = new IndexedDB();
     playList = new PlayList();
+    new BgControl();
+
 
 
 }

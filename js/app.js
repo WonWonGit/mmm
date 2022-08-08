@@ -1,5 +1,6 @@
 import { IndexedDB } from "./indexedDB.js";
 import {AudioControl} from "./audioControl.js";
+import {BgControl} from "./bgControl.js";
 class App{
     constructor(playList){
 
@@ -8,6 +9,8 @@ class App{
         this.ctx = this.canvas.getContext('2d');
         document.body.appendChild(this.canvas);
         this.audioControl = new AudioControl(playList, this.ctx);
+        this.bgControl = new BgControl();
+
 
 
         window.addEventListener('resize', this.resize.bind(this), {
