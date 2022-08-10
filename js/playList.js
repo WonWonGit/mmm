@@ -46,9 +46,9 @@ export class PlayList{
 
     //** 노션에 정리하기
     readAsDataURL(file){
-        return new Promise((resolve, reject)=>{
-			let fileReader = new FileReader();
-			fileReader.onload = function(){
+        return new Promise((resolve)=>{
+			const fileReader = new FileReader();
+ 			fileReader.onload = function(){
 				return resolve({src:fileReader.result, name:file.name});
 			}
 			fileReader.readAsDataURL(file);
