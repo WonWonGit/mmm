@@ -1,6 +1,9 @@
 import { IndexedDB } from "./indexedDB.js";
 import {AudioControl} from "./audioControl.js";
 import {BgControl} from "./bgControl.js";
+import {NavControl} from "./nav.js";
+import {PlayListControl} from "./playListControl.js";
+
 class App{
     constructor(playList){
 
@@ -8,10 +11,12 @@ class App{
         this.canvas.className = 'mainCanvas';
         this.ctx = this.canvas.getContext('2d');
         document.body.appendChild(this.canvas);
-        this.audioControl = new AudioControl(playList, this.ctx);
+        
+        
         this.bgControl = new BgControl();
-
-
+        this.navControl = new NavControl();
+        this.playListControl = new PlayListControl();
+        this.audioControl = new AudioControl(playList, this.ctx, this.playListControl);
 
         window.addEventListener('resize', this.resize.bind(this), {
             once: false,
@@ -45,7 +50,7 @@ window.onload = () => {
         indexedDB.getAllIndexedPlayList()
                        .then(result => {
                         const app = new App(result);
-                       });
+        });
     }).catch(e => {
         console.error(`Audio permissions denied: ${e}`);
     });

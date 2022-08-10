@@ -33,3 +33,5 @@ export class BgControl{
         
     }
 }
+
+new BgControl();
