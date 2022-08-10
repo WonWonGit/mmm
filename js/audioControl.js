@@ -2,12 +2,13 @@ import { CanvasControl } from "./canvasControl.js";
 import { PlayListControl } from "./playListControl.js";
 export class AudioControl {
   constructor(playList, ctx, playListControl) {
-    this.audioContext = new (window.AudioContext ||
-      window.webkitAudioContext)();
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    this.audio = document.getElementById("audio");
+    this.analyser = this.audioContext.createAnalyser();
+    this.source = this.audioContext.createMediaElementSource(this.audio);  
     
     this.playListControl = playListControl;
 
-    this.audio = document.getElementById("audio");
 
     this.ctx = ctx;
 
@@ -58,37 +59,23 @@ export class AudioControl {
         this.audio.play();
       }
     });
+
+    
   }
 
   getPlayList() {
     return this.playList;
   }
 
-  init(){
-    this.analyser = this.audioContext.createAnalyser();
-      this.source = this.audioContext.createMediaElementSource(this.audio);
+  initAudioContext(e) {
+    this.audioContext.resume().then(()=>{
       this.source.connect(this.analyser);
       this.source.connect(this.audioContext.destination);
       this.analyser.fftSize = 512;
       this.bufferLength = this.analyser.frequencyBinCount;
       this.dataArray = new Uint8Array(this.bufferLength);
-  
-  }
-  
-
-  initAudioContext(e) {
-    if(this.audioContext.state === 'suspended'){
-      this.audioContext.resume().then(()=>{
-      this.init();
       this.startMusic();
-    })  
-    }else{
-      this.init();
-      this.startMusic();
-    }
-    
-
-  
+    })
   }
 
   stopMusic(){
@@ -103,6 +90,7 @@ export class AudioControl {
         document.getElementsByClassName("inform")[0].style.opacity = 1;
       }, 1800);
       this.getDataArray();
+      this.source.disconnect();
   }
 
   startMusic(){
