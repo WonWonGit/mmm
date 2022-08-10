@@ -13,6 +13,15 @@ body{
     padding:0;
 }
 
+ul{
+    margin: 0;
+    padding: 0;
+}
+
+li{
+    list-style: none;
+}
+
 .mainCanvas {
     width: 50%;
     /* width: 100%; */
@@ -24,6 +33,10 @@ body{
     left: 50%;
     transform: translate(-50%, 0);
     overflow: hidden;
+}
+
+h1, h2, h3{
+    margin: 0;
 }
 /* 
 .leftCanvas {
