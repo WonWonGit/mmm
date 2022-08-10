@@ -1,11 +1,11 @@
 import { CanvasControl } from "./canvasControl.js";
+import { PlayListControl } from "./playListControl.js";
 export class AudioControl {
-  constructor(playList, ctx) {
+  constructor(playList, ctx, playListControl) {
     this.audioContext = new (window.AudioContext ||
       window.webkitAudioContext)();
-    this.audioContext.resume().then(() => {
-      this.init();
-    });
+    
+    this.playListControl = playListControl;
 
     this.audio = document.getElementById("audio");
 
@@ -23,13 +23,13 @@ export class AudioControl {
     this.currentName = "";
 
     this.informBtn = document.getElementById("informBtn");
-    this.informBtn.addEventListener("click", (e) => this.startMusic(e));
+    this.informBtn.addEventListener("click", (e) => this.initAudioContext(e));
 
     this.startBtn = document.getElementById("start");
-    this.startBtn.addEventListener("click", (e) => this.startMusic(e));
+    this.startBtn.addEventListener("click", (e) => this.initAudioContext(e));
 
     this.pauseBtn = document.getElementById('pause');
-    this.pauseBtn.addEventListener("click", (e) => this.startMusic(e));
+    this.pauseBtn.addEventListener("click", (e) => this.stopMusic(e));
 
     this.previousBtn = document.getElementById("previous");
     this.previousBtn.addEventListener("click", (e) => this.previousMusic(e));
@@ -64,35 +64,34 @@ export class AudioControl {
     return this.playList;
   }
 
-  init() {
+  init(){
     this.analyser = this.audioContext.createAnalyser();
-    this.source = this.audioContext.createMediaElementSource(this.audio);
-    this.source.connect(this.analyser);
-    this.source.connect(this.audioContext.destination);
-    // this.analyser.fftSize = 1024;
-    this.analyser.fftSize = 512;
-    this.bufferLength = this.analyser.frequencyBinCount;
-    this.dataArray = new Uint8Array(this.bufferLength);
+      this.source = this.audioContext.createMediaElementSource(this.audio);
+      this.source.connect(this.analyser);
+      this.source.connect(this.audioContext.destination);
+      this.analyser.fftSize = 512;
+      this.bufferLength = this.analyser.frequencyBinCount;
+      this.dataArray = new Uint8Array(this.bufferLength);
+  
+  }
+  
+
+  initAudioContext(e) {
+    if(this.audioContext.state === 'suspended'){
+      this.audioContext.resume().then(()=>{
+      this.init();
+      this.startMusic();
+    })  
+    }else{
+      this.init();
+      this.startMusic();
+    }
+    
+
+  
   }
 
-  startMusic(e) {
-    if (this.audio.paused) {
-      if (this.getPlayList().length === 0) {
-        this.modal.id = 'show';
-      } else {
-        this.audio.src = this.getPlayList()[this.index].src;
-        console.log(this.getPlayList()[this.index].name)
-        this.currentSong.innerHTML = this.getPlayList()[this.index].name;
-        this.audio.currentTime = this.currentTime;
-        this.startBtn.style.display = "none";
-        this.pauseBtn.style.display = "block";
-        this.audio.play();
-        this.getDataArray();
-        document.getElementsByClassName("inform")[0].style.visibility =
-          "hidden";
-        document.getElementsByClassName("inform")[0].style.opacity = 0;
-      }
-    } else {
+  stopMusic(){
       this.audio.pause();
       this.currentTime = this.audio.currentTime;
       this.startBtn.style.display = "block";
@@ -104,6 +103,27 @@ export class AudioControl {
         document.getElementsByClassName("inform")[0].style.opacity = 1;
       }, 1800);
       this.getDataArray();
+  }
+
+  startMusic(){
+    if (this.audio.paused) {
+      if (this.getPlayList().length === 0) {
+        this.modal.id = 'show';
+      } else {
+        this.audio.src = this.getPlayList()[this.index].src;
+        // this.audio.id = this.getPlayList()[this.index].id;
+        console.log(this.getPlayList()[this.index].name)
+        this.currentSong.innerHTML = this.getPlayList()[this.index].name;
+        this.audio.currentTime = this.currentTime;
+        this.startBtn.style.display = "none";
+        this.pauseBtn.style.display = "block";
+        this.audio.play();
+        this.getDataArray();
+        document.getElementsByClassName("inform")[0].style.visibility =
+          "hidden";
+        document.getElementsByClassName("inform")[0].style.opacity = 0;
+        this.playListControl.playingMusic(this.getPlayList()[this.index].id);
+      }
     }
   }
 
@@ -127,6 +147,8 @@ export class AudioControl {
     this.startBtn.style.display = "none";
     this.pauseBtn.style.display = "block";
     this.audio.play();
+
+    this.playListControl.playingMusic(this.getPlayList()[this.index].id);
   }
 
   nextMusic(e) {
@@ -140,6 +162,8 @@ export class AudioControl {
     this.startBtn.style.display = "none";
     this.pauseBtn.style.display = "block";
     this.audio.play();
+    
+    this.playListControl.playingMusic(this.getPlayList()[this.index].id);
   }
 
   resize(stageWidth, stageHeight) {
