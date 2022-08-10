@@ -32,23 +32,24 @@ export class IndexedDB {
   }
 
   async writeIdxedDB(audios) {
-    const request = window.indexedDB.open("mmm");
+    return new Promise((resolve, reject) => {
+      const request = window.indexedDB.open("mmm");
+      request.onerror = (e) => {
+        alert("DataBase error", e.target.errorCode);
+      };
 
-    request.onerror = (e) => {
-      alert("DataBase error", e.target.errorCode);
-    };
-
-    request.onsuccess = (e) => {
-      const db = e.target.result;
-      const transaction = db
-        .transaction(["mmmAudio"], "readwrite")
-        .objectStore("mmmAudio");
-
-      audios.forEach((audio) => {
-        console.log("ttt");
-        transaction.add(audio);
-      });
-    };
+      request.onsuccess = (e) => {
+        const db = e.target.result;
+        const transaction = db
+          .transaction(["mmmAudio"], "readwrite")
+          .objectStore("mmmAudio");
+  
+          audios.forEach((audio) => {
+            transaction.add(audio);
+          });
+          resolve(200)
+      };
+    }).then(result => result);
   }
 
   async getAllIndexedPlayList() {
