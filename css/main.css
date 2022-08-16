@@ -425,13 +425,29 @@ a:hover{
     width: 50%;
 }
 
-.my-playList .title .main-title p{
+.my-playList .title .main-title .sub-title{
+    display: flex;
+    align-content: space-between;
+    width: 500px;
+}
+
+.my-playList .title .main-title .sub-title p{
     margin: 0;
     padding-top: 10px;
     font-size: 15px;
     font-weight: 400;
     color: #8e8c8c;
-    
+}
+
+.my-playList .title .main-title .sub-title .tracks{
+    width: 50%;
+}
+
+.my-playList .title .main-title .sub-title .edit{
+    width: 40%;
+    text-align: end;
+    cursor: pointer;
+    z-index: 999;
 }
 
 .my-playList .title .file-name{
@@ -576,6 +592,40 @@ a:hover{
     white-space: nowrap;
     color: #242424;
 }
+
+.my-playList .ul-playList .li-playList .li-grip{
+    width: 20px;
+    height: 20px;
+    transform: translateX(14px);
+}
+
+.my-playList .ul-playList .li-playList .li-grip.fade-in{
+    animation: fade-in .3s ease-in;
+    z-index: 999;
+}
+
+.my-playList .ul-playList .li-playList .li-grip.fade-out{
+    animation: fade-out .3s forwards;
+    z-index: 0;
+}
+
+.my-playList .ul-playList .li-playList .li-delete{
+    width: 16px;
+    height: 20px;
+}
+
+.my-playList .ul-playList .li-playList .li-delete.fade-out{
+    animation: fade-out .3s forwards;
+    z-index: 0;
+}
+
+.my-playList .ul-playList .li-playList .li-delete.fade-in{
+    transform: translateX(-7px);
+    animation: fade-in .3s ease-in;
+    z-index: 999;
+}
+
+
 
 
 .my-playList .ul-playList .li-playList .disc{
