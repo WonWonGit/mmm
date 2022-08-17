@@ -60,14 +60,14 @@ export class IndexedDB {
       request.onsuccess = (e) => {
         const db = request.result;
         const transaction = db.transaction("mmmAudio");
-        let allPalyListArr = [];
+        var allPalyListArr = [];
         transaction.onerror = (e) => console.log("fail");
         transaction.oncomplete = (e) => console.log("success");
 
         const objStore = transaction.objectStore("mmmAudio"); // 2. name 저장소 접근
         const cursorRequest = objStore.openCursor();
         cursorRequest.onsuccess = (e) => {
-          let cursor = e.target.result;
+        var cursor = e.target.result;
 
           if (cursor) {
             const value = objStore.get(cursor.key); // 3. 커서를 사용해 데이터 접근

@@ -1,15 +1,19 @@
 import { IndexedDB } from "./indexedDB.js";
+import { OrderControl } from "./orderControl.js";
 
 export class PlayListControl{
+    
     constructor(){
 
         this.files = [];
         this.uploadMusicFiles = [];
         this.allPlayList = [];
+        this.test = 0;
 
         this.indexedDB = new IndexedDB();
 
         this.playListUl = document.querySelector('.ul-playList');
+        this.playListNav = document.querySelector('.nav-playList');
         this.init();
 
         this.playList = document.querySelector('.nav-playList');
@@ -41,12 +45,8 @@ export class PlayListControl{
         this.playListGrip = document.getElementsByClassName('li-grip');
         this.playListDelete = document.getElementsByClassName('li-delete');
 
-        this.position = {x:null, y:null};
-        this.diff = {x:null, y:null};
-        this.mouseDown = false;
-        this.seletedItem = null;
-        this.resetTransition = false;
-        this.trasitonTime = 400;
+        this.playListLi = document.getElementsByClassName('li-playList');
+        
     }
 
     getAllPlayList(){
@@ -93,12 +93,14 @@ export class PlayListControl{
             this.playListUl.insertAdjacentHTML('beforeend',insertHtml);
             // document.getElementById(`${playList.id}`).addEventListener('click',(event)=>{this.playListDelete(event.target.id)});
         });
+        this.orderControl = new OrderControl();
+        [...this.playListLi].forEach((li, index) => {
+            li.setAttribute('order', index+1);
+            li.addEventListener('mousedown',(e)=>{ this.orderControl.seletedPlayListLi(e, li)});
+            li.addEventListener('mouseup', (e)=>{ this.orderControl.doneSelectedPlayList(e)});
+        });
 
-        this.playListEdit = document.querySelector('.edit');
-        this.playListGrip = document.getElementsByClassName('li-grip');
-        this.playListDelete = document.getElementsByClassName('li-delete');
-
-        
+        this.orderControl.positionItem();
     }
 
 
@@ -115,7 +117,6 @@ export class PlayListControl{
         this.addIcon.classList.add('fade-out');
         this.musicIcon.classList.remove('fade-out');
         this.musicIcon.classList.add('fade-in');
-        // [...this.addIcon.classList].includes('fade-in') ? [...this.addIcon.classList].add('fade-out') : [...this.addIcon.classList].add('fade-in');
     }
 
     hideAddBtn(){
@@ -174,9 +175,7 @@ export class PlayListControl{
 
     playingMusic(nowPlayingMusicId){
         
-        var playListLi =  document.getElementsByClassName('li-playList');
-        
-        [...playListLi].forEach((li) => {
+        [...this.playListLi ].forEach((li) => {
             if(li.id == nowPlayingMusicId){
                 li.style.backgroundColor = '#f3f3f3';
                 li.classList.add('showDisc');
@@ -196,7 +195,6 @@ export class PlayListControl{
             this.playListEdit.innerHTML = 'done';
 
             [...this.playListGrip].forEach((grip) => {
-                console.log(grip.classList);
                 grip.classList.remove('fade-in');
                 grip.classList.add('fade-out');
             });
@@ -209,7 +207,6 @@ export class PlayListControl{
             this.playListEdit.innerHTML = 'edit';
 
             [...this.playListGrip].forEach((grip) => {
-                console.log(grip.classList);
                 grip.classList.remove('fade-out');
                 grip.classList.add('fade-in');
             });
@@ -220,8 +217,9 @@ export class PlayListControl{
             });
         }
     }
-}
 
-// window.onload = () => {
-//     new PlayListControl();
-// }
+    deleteMusic(id){
+        console.log(id);
+    }
+
+}

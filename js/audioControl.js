@@ -51,11 +51,14 @@ export class AudioControl {
         this.index += 1;
         this.audio.src = this.getPlayList()[this.index].src;
         this.currentSong.innerHTML = this.getPlayList()[this.index].name;
+        this.playListControl.playingMusic(this.getPlayList()[this.index].id);
         this.audio.play();
+       
       } else {
         this.index = 0;
         this.audio.src = this.getPlayList()[index].src;
         this.currentSong.innerHTML = this.getPlayList()[this.index].name;
+        this.playListControl.playingMusic(this.getPlayList()[this.index].id);
         this.audio.play();
       }
     });
