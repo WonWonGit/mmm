@@ -14,9 +14,12 @@ export class IndexedDB {
       let db;
       const request = idxedDB.open("mmm"); // 3. SampleDB(db) 열기
 
+
+      //createIndex로 분리하기
+      //src, id, name
       request.onupgradeneeded = (e) => {
         db = e.target.result;
-        db.createObjectStore("mmmAudio", { autoIncrement: true }); // 4. name저장소 만들고, key는 id로 지정
+        const objectStore = db.createObjectStore("mmmAudio", { autoIncrement: true }); // 4. name저장소 만들고
         request.onerror = (e) => alert("failed");
         request.onsuccess = (e) => (db = request.result); // 5. 성공시 db에 result를 저장
       };
@@ -104,5 +107,23 @@ export class IndexedDB {
         };
       };
     }).then(result => {return result});
+  }
+
+  updatePlayListId(id){
+    const request = window.indexedDB.open("mmm"); // 1. db 열기
+    request.onerror = (e) => console.log(e.target.errorCode);
+    
+    request.onsuccess = (e) => {
+      const db = request.result;
+      const transaction = db.transaction("mmmAudio", "readwrite");
+      transaction.onerror = (e) => reject(console.log("fail"));
+      transaction.oncomplete = (e) => console.log("success");
+
+      const objStore = transaction.objectStore("mmmAudio");
+      
+      
+      console.log(objStoreRequest.key);
+
+    }
   }
 }

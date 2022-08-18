@@ -1,5 +1,6 @@
+import { IndexedDB } from "./indexedDB.js";
 export class OrderControl{
-    constructor(){
+    constructor(allPlayList){
         this.position = {x:null, y:null};
         this.diff = {x:null, y:null};
         this.mouseDown = false;
@@ -8,15 +9,28 @@ export class OrderControl{
         this.trasitonTime = 400;
 
         this.playListUl = document.querySelector('.ul-playList');
-        
+
         this.playListLi = document.getElementsByClassName('li-playList');
 
         this.playListNav = document.querySelector('.nav-playList');
+        
+        [...this.playListLi].forEach((li, index) => {
+            li.setAttribute('order', index+1);
+            li.addEventListener('mousedown',(e)=>{ this.seletedPlayListLi(e, li)});
+            li.addEventListener('mouseup', (e)=>{ this.doneSelectedPlayList(e)});
+        });
+
         this.playListNav.addEventListener('mousemove', (e)=>{this.setMousePosition(e)});
-       
+        
+        this.allPlayList = allPlayList;
+
+        this.indexedDB = new IndexedDB();
     }
 
     seletedPlayListLi(e, li){
+
+        console.log('select');
+
         if(!this.position.x || this.resetTransition) return;
         
         this.mouseDown = true;
@@ -40,11 +54,14 @@ export class OrderControl{
     doneSelectedPlayList(e){
         this.mouseDown = false;
         this.seletedLi.classList.remove('selected');
+        // this.positionItem(); 
         this.postionItemsInOrder();
-        this.positionItem(); 
+        
     }
 
     setMousePosition(e){
+
+        // console.log('move');
 
         this.position.x = e.clientX - this.playListUl.offsetLeft;
         this.position.y = e.clientY - (this.playListUl.offsetTop - this.playListUl.scrollTop);
@@ -98,7 +115,8 @@ export class OrderControl{
             item.style.top = (60 * indexCounter) + 'px';
             item.setAttribute('order', indexCounter+1);
             indexCounter++;
-        })
+        });
+
 
     }
 
@@ -132,5 +150,26 @@ export class OrderControl{
             });
             this.resetTransition = false;
         }, this.trasitonTime);
+        this.playListLi = playListItems;
+        this.test();
+    }
+
+    test(){
+        var playListItems = [...this.playListLi];
+        var test = [];
+
+        // console.log(this.allPlayList);/
+
+        this.allPlayList.forEach((item, index) => {
+            console.log(item.id , playListItems[index].id);
+            if(item.id !== Number(playListItems[index].id)){
+                this.indexedDB.updatePlayListId(item.id);
+            }
+        });
+        // filter 에서 변경되어야할 리스트랑 화면의 순서대로 보이는 아이디값도 같이 전달
+        // 변경되어야할 리스트의 아이디값으로 update 해줌
+        //
+        // console.log(test);
+    
     }
 }

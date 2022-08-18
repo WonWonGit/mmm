@@ -93,12 +93,8 @@ export class PlayListControl{
             this.playListUl.insertAdjacentHTML('beforeend',insertHtml);
             // document.getElementById(`${playList.id}`).addEventListener('click',(event)=>{this.playListDelete(event.target.id)});
         });
-        this.orderControl = new OrderControl();
-        [...this.playListLi].forEach((li, index) => {
-            li.setAttribute('order', index+1);
-            li.addEventListener('mousedown',(e)=>{ this.orderControl.seletedPlayListLi(e, li)});
-            li.addEventListener('mouseup', (e)=>{ this.orderControl.doneSelectedPlayList(e)});
-        });
+        this.orderControl = new OrderControl(this.getAllPlayList());
+        
 
         this.orderControl.positionItem();
     }
@@ -128,7 +124,7 @@ export class PlayListControl{
 
     async filesUpload (event){
         const fileArr = [...event.target.files];
-        const files = await Promise.all(fileArr.map(file=>{return this.readAsDataURL(file)}));
+        const files = await Promise.all(fileArr.map((file, index)=>{return this.readAsDataURL(file, index)}));
         this.setUploadMusicFiles(files);
         event.target.files.length > 1 ? this.fileName.innerHTML = `${event.target.files.length} files` : this.fileName.innerHTML = event.target.files[0].name;
         if(event.target.value !== ''){
@@ -138,11 +134,13 @@ export class PlayListControl{
         }
     }
 
-    readAsDataURL(file){
+    readAsDataURL(file, index){
+        // console.log(this.indexedDB.getAllPlayList())
         return new Promise((resolve)=>{
 			const fileReader = new FileReader();
+            var id = this.indexedDB.getAllPlayList().length + index;
  			fileReader.onload = function(){
-				return resolve({src:fileReader.result, name:file.name});
+				return resolve({src:fileReader.result, name:file.name, id: id});
 			}
 			fileReader.readAsDataURL(file);
 		});

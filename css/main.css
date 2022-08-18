@@ -488,7 +488,7 @@ a:hover{
 }
 
 .my-playList .title .main-title .upload-btn{
-    transform: translate(175px, -54px);
+    transform: translate(175px, -27px);
     display: none;
     cursor: pointer;
 }
@@ -499,10 +499,10 @@ a:hover{
 
 @keyframes bounce{
     from{
-        transform: translate(175px, -54px);
+        transform: translate(175px, -27px);
     }
     to{
-        transform: translate(175px, -60px);
+        transform: translate(175px, -30px);
     }
 }
 
@@ -600,8 +600,10 @@ a:hover{
 }
 
 .my-playList .ul-playList .li-playList.selected{
-    transform: scale(1.03);
+    transform: scale(1.02);
     box-shadow: 0px 8px 20px 1px rgba(0,0,0,0.1);
+    background: #fff;
+    z-index: 999;
 }
 
 
