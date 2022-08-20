@@ -19,7 +19,9 @@ export class AudioControl {
     this.index = 0;
     this.plyaListLength = playList.length;
     this.currentTime = 0;
-    this.playList = playList;
+    this.playList = playList.sort((a,b) => {
+      return a.id > b.id ? 1 : -1;
+    });
     this.currentSong = document.getElementsByClassName("currnetSong")[0];
     this.currentName = "";
 

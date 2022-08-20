@@ -75,7 +75,7 @@ export class IndexedDB {
           if (cursor) {
             const value = objStore.get(cursor.key); // 3. 커서를 사용해 데이터 접근
             value.onsuccess = (e) => {
-              allPalyListArr.push({ ...e.target.result, id: cursor.key });
+              allPalyListArr.push({ ...e.target.result, id: e.target.result.id, key:cursor.key });
               // this.audio.src = e.target.result.src;
             };
             cursor.continue(); // 4. cursor로 순회
@@ -109,21 +109,68 @@ export class IndexedDB {
     }).then(result => {return result});
   }
 
-  updatePlayListId(id){
-    const request = window.indexedDB.open("mmm"); // 1. db 열기
-    request.onerror = (e) => console.log(e.target.errorCode);
+  updatePlayListId(test){
+    console.log(test);
+    return new Promise((resolve) => {
+      const request = window.indexedDB.open("mmm");
+      request.onerror = (e) => console.log(e.target.errorCode);
+      request.onsuccess = (e) => {
+        const db = request.result;
+        const transaction = db.transaction("mmmAudio", "readwrite");
+        transaction.onerror = (e) => reject(console.log("fail"));
+        transaction.oncomplete = (e) => console.log("success");
+
+        const objStore = transaction.objectStore("mmmAudio");
+
+        objStore.openCursor().onsuccess = (e) => {
+          const cursor = e.target.result;
+
+          if(cursor){
+            // console.log(cursor, cursor.id);
+            console.log(test.key);
+            if(cursor.key === Number(test.key)){
+              console.log(cursor.value.id, test.id);
+              if(cursor.value.id !== Number(test.id)){
+              const updateData = cursor.value;
+              console.log(updateData, test.id);
+              updateData.id = Number(test.id);
+  
+              const request = cursor.update(updateData);
+              
+              request.onsuccess = () => {
+                return resolve('success');
+              }
+              }
+            }
+            cursor.continue();
+          }
+        }
+
+      }
+
+    })
     
-    request.onsuccess = (e) => {
-      const db = request.result;
-      const transaction = db.transaction("mmmAudio", "readwrite");
-      transaction.onerror = (e) => reject(console.log("fail"));
-      transaction.oncomplete = (e) => console.log("success");
+    
+      // }
+      // const objectStoreKeyRequest = objStore.get(key);
 
-      const objStore = transaction.objectStore("mmmAudio");
+      // objectStoreKeyRequest.onsuccess = (e) => {
+      //   console.log(e.target.result, newId);
+
+        // const objStoreRequest = objStore.delete(parseInt(key)); // 3. 삭제하기
+        // objStoreRequest.onsuccess = (e) => {
+        //   console.log('delete DONE!!');
+        //   resolve(200);
+        // };
+
+
+
+
+      }
       
       
-      console.log(objStoreRequest.key);
+      // console.log(value);
 
-    }
-  }
+    
+  
 }

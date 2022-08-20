@@ -4,7 +4,7 @@ import {BgControl} from "./bgControl.js";
 import {NavControl} from "./nav.js";
 import {PlayListControl} from "./playListControl.js";
 
-class App{
+export class App{
     constructor(playList){
 
         this.canvas = document.createElement('canvas');

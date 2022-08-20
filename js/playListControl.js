@@ -68,6 +68,9 @@ export class PlayListControl{
 
     async init(){
         var allPalyList = await this.indexedDB.getAllIndexedPlayList();
+        allPalyList.sort((a,b) => {
+            return a.id > b.id ? 1 : -1;
+        });
         this.setAllPlayList(allPalyList);
 
         while (this.playListUl.hasChildNodes()) {
@@ -77,7 +80,7 @@ export class PlayListControl{
         this.tracks.innerHTML = `${this.allPlayList.length} tracks`;
 
         this.getAllPlayList().forEach((playList,index) => {
-            var insertHtml = `<li class="li-playList" id=${playList.id}>
+            var insertHtml = `<li class="li-playList" id=${playList.id} keyIndex=${playList.key}>
                                 <div class="disc">
                                     <img src="/icon/compact-disc-solid.svg">
                                 </div>

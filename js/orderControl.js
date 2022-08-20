@@ -1,4 +1,5 @@
 import { IndexedDB } from "./indexedDB.js";
+import {App} from "./app.js";
 export class OrderControl{
     constructor(allPlayList){
         this.position = {x:null, y:null};
@@ -114,17 +115,24 @@ export class OrderControl{
             
             item.style.top = (60 * indexCounter) + 'px';
             item.setAttribute('order', indexCounter+1);
+            item.setAttribute('id', indexCounter)
+            // item.setAttribute('key', this.allPlayList[indexCounter].key)
             indexCounter++;
         });
+
+       
 
 
     }
 
     postionItemsInOrder(){
         var playListItems = [...this.playListLi];
+        var playListNumber = document.getElementsByClassName('li-index');
+
         playListItems.sort((a, b) =>{
             return Number(a.getAttribute('order')) > Number(b.getAttribute('order')) ? 1 : -1;
         });
+
         playListItems.forEach((item, index) => {
             if(item.getAttribute('selected') === 'yes'){
                 item.removeAttribute('selected');
@@ -136,6 +144,7 @@ export class OrderControl{
             //60 19
             item.style.top = (60 * index) + 'px';
             item.setAttribute('order', index+1);
+            item.setAttribute('id', index)
         });
 
         this.resetTransition = true;
@@ -145,27 +154,36 @@ export class OrderControl{
                 this.playListUl.removeChild(this.playListUl.lastChild);
             }
 
-            playListItems.forEach((item) => {
+            playListItems.forEach((item, index) => {
                 this.playListUl.append(item);
+                index < 10 ? item.querySelector('.li-index').innerHTML = `0${index+1}` : index+1;
             });
             this.resetTransition = false;
         }, this.trasitonTime);
+
         this.playListLi = playListItems;
+        //audio 재정렬
         this.test();
     }
 
-    test(){
+    async test(){
         var playListItems = [...this.playListLi];
-        var test = [];
+        // var test = [];
 
-        // console.log(this.allPlayList);/
-
-        this.allPlayList.forEach((item, index) => {
-            console.log(item.id , playListItems[index].id);
-            if(item.id !== Number(playListItems[index].id)){
-                this.indexedDB.updatePlayListId(item.id);
-            }
+        playListItems.sort((a, b) => {
+            return Number(a.getAttribute('keyIndex')) > Number(b.getAttribute('keyIndex')) ? 1 : -1;
         });
+
+        this.allPlayList.sort((a, b) =>{
+            return a.key > b.key ? 1 : -1;
+        });
+
+       this.allPlayList.forEach((item, index) => {
+            item.id = playListItems[index].id;
+        });
+
+
+        await Promise.all(this.allPlayList.map((test) => {return this.indexedDB.updatePlayListId(test)}))
         // filter 에서 변경되어야할 리스트랑 화면의 순서대로 보이는 아이디값도 같이 전달
         // 변경되어야할 리스트의 아이디값으로 update 해줌
         //
