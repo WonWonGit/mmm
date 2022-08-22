@@ -1,4 +1,4 @@
-import { PlayList } from "./playList.js";
+// import { PlayList } from "./playList.js";
 
 export class IndexedDB {
   constructor(playList) {
@@ -6,13 +6,13 @@ export class IndexedDB {
     this.allPalyList = [];
     this.audio = document.getElementById("audio");
 
-    const idxedDB = window.indexedDB;
+    const indexedDB = window.indexedDB;
 
-    if (!idxedDB)
+    if (!indexedDB)
       window.alert("해당 브라우저에서는 indexedDB를 지원하지 않습니다.");
     else {
       let db;
-      const request = idxedDB.open("mmm"); // 3. SampleDB(db) 열기
+      const request = indexedDB.open("mmm"); // 3. SampleDB(db) 열기
 
 
       //createIndex로 분리하기
@@ -136,13 +136,11 @@ export class IndexedDB {
               updateData.id = Number(test.id);
   
               const request = cursor.update(updateData);
-              
-              request.onsuccess = () => {
-                return resolve('success');
-              }
               }
             }
             cursor.continue();
+          }else{
+            resolve(200)
           }
         }
 

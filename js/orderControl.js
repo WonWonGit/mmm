@@ -1,7 +1,7 @@
 import { IndexedDB } from "./indexedDB.js";
-import {App} from "./app.js";
+import { AudioControl } from "./audioControl.js";
 export class OrderControl{
-    constructor(allPlayList){
+    constructor(allPlayList, audioControl){
         this.position = {x:null, y:null};
         this.diff = {x:null, y:null};
         this.mouseDown = false;
@@ -13,29 +13,41 @@ export class OrderControl{
 
         this.playListLi = document.getElementsByClassName('li-playList');
 
+        this.playListOrder = document.getElementsByClassName('li-order');
         this.playListNav = document.querySelector('.nav-playList');
         
         [...this.playListLi].forEach((li, index) => {
             li.setAttribute('order', index+1);
-            li.addEventListener('mousedown',(e)=>{ this.seletedPlayListLi(e, li)});
-            li.addEventListener('mouseup', (e)=>{ this.doneSelectedPlayList(e)});
+            // li.addEventListener('mousedown',(e)=>{ this.seletedPlayListLi(e, li)});
+            // li.addEventListener('mouseup', (e)=>{ this.doneSelectedPlayList(e)});
         });
+
+        [...this.playListOrder].forEach((li) => {
+            li.addEventListener('mousedown',(e)=>{ this.seletedPlayListLi(e, li, li.id)});
+            li.addEventListener('mouseup', (e)=>{ this.doneSelectedPlayList(e)});
+        })
 
         this.playListNav.addEventListener('mousemove', (e)=>{this.setMousePosition(e)});
         
         this.allPlayList = allPlayList;
 
         this.indexedDB = new IndexedDB();
+        this.audioControl = audioControl;
+        // this.audioControl = new AudioControl(this.allPlayList);
+
+
+        this.audion = document.querySelector('audio');
     }
 
-    seletedPlayListLi(e, li){
+    seletedPlayListLi(e, li, id){
 
-        console.log('select');
+        console.log(id);
+
 
         if(!this.position.x || this.resetTransition) return;
         
         this.mouseDown = true;
-        this.seletedLi = li;
+        this.seletedLi = document.getElementById(id);
         this.seletedLi.zIndex = '1000';
         this.diff.y = this.position.y - this.seletedLi.offsetTop;
         this.diff.x = this.position.x - this.seletedLi.offsetLeft; 
@@ -163,12 +175,11 @@ export class OrderControl{
 
         this.playListLi = playListItems;
         //audio 재정렬
-        this.test();
+        this.updateId();
     }
 
-    async test(){
+    async updateId(){
         var playListItems = [...this.playListLi];
-        // var test = [];
 
         playListItems.sort((a, b) => {
             return Number(a.getAttribute('keyIndex')) > Number(b.getAttribute('keyIndex')) ? 1 : -1;
@@ -183,11 +194,19 @@ export class OrderControl{
         });
 
 
-        await Promise.all(this.allPlayList.map((test) => {return this.indexedDB.updatePlayListId(test)}))
-        // filter 에서 변경되어야할 리스트랑 화면의 순서대로 보이는 아이디값도 같이 전달
-        // 변경되어야할 리스트의 아이디값으로 update 해줌
-        //
-        // console.log(test);
+       await Promise.all(this.allPlayList.map((test) => {return this.indexedDB.updatePlayListId(test)}))
+       .then((result) => {
+        this.updateAudioOrder();
+       });
     
+    }
+
+    async updateAudioOrder(){
+        console.log('test2');
+        var allIndexedPlayList = await this.indexedDB.getAllIndexedPlayList();
+        allIndexedPlayList.sort((a,b) => {
+            return a.id > b.id ?  1 : -1;
+        })
+        this.audioControl.setPlayList(allIndexedPlayList);
     }
 }

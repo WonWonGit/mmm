@@ -6,9 +6,8 @@ export class AudioControl {
     this.audio = document.getElementById("audio");
     this.analyser = this.audioContext.createAnalyser();
     this.source = this.audioContext.createMediaElementSource(this.audio);  
-    
+  
     this.playListControl = playListControl;
-
 
     this.ctx = ctx;
 
@@ -53,14 +52,14 @@ export class AudioControl {
         this.index += 1;
         this.audio.src = this.getPlayList()[this.index].src;
         this.currentSong.innerHTML = this.getPlayList()[this.index].name;
-        this.playListControl.playingMusic(this.getPlayList()[this.index].id);
+        this.playListControl.playingMusic(this.getPlayList()[this.index].key);
         this.audio.play();
        
       } else {
         this.index = 0;
         this.audio.src = this.getPlayList()[index].src;
         this.currentSong.innerHTML = this.getPlayList()[this.index].name;
-        this.playListControl.playingMusic(this.getPlayList()[this.index].id);
+        this.playListControl.playingMusic(this.getPlayList()[this.index].key);
         this.audio.play();
       }
     });
@@ -68,11 +67,19 @@ export class AudioControl {
     
   }
 
+  setPlayList(playList){
+    this.playList = playList;
+    this.plyaListLength = this.playList.length;
+
+  }
+
   getPlayList() {
     return this.playList;
   }
 
   initAudioContext(e) {
+   
+    // this.audio = document.getElementById("audio");
     this.audioContext.resume().then(()=>{
       this.source.connect(this.analyser);
       this.source.connect(this.audioContext.destination);
@@ -99,6 +106,7 @@ export class AudioControl {
   }
 
   startMusic(){
+    console.log(this.getPlayList());
     if (this.audio.paused) {
       if (this.getPlayList().length === 0) {
         this.modal.id = 'show';
@@ -115,7 +123,7 @@ export class AudioControl {
         document.getElementsByClassName("inform")[0].style.visibility =
           "hidden";
         document.getElementsByClassName("inform")[0].style.opacity = 0;
-        this.playListControl.playingMusic(this.getPlayList()[this.index].id);
+        this.playListControl.playingMusic(this.getPlayList()[this.index].key);
       }
     }
   }
@@ -129,22 +137,26 @@ export class AudioControl {
   }
 
   previousMusic(e) {
-    if (this.index > 0) {
-      this.index -= 1;
-    } else {
-      this.index = 0;
+    console.log(this.getPlayList());
+    if(!this.audio.paused){
+      if (this.index > 0) {
+        this.index -= 1;
+      } else {
+        this.index = 0;
+      }
+      this.audio.src = this.getPlayList()[this.index].src;
+      this.audio.src = this.getPlayList()[this.index].src;
+      this.currentSong.innerHTML = this.getPlayList()[this.index].name;
+      this.startBtn.style.display = "none";
+      this.pauseBtn.style.display = "block";
+      this.audio.play();
+  
+      this.playListControl.playingMusic(this.getPlayList()[this.index].key);
     }
-    this.audio.src = this.getPlayList()[this.index].src;
-    this.audio.src = this.getPlayList()[this.index].src;
-    this.currentSong.innerHTML = this.getPlayList()[this.index].name;
-    this.startBtn.style.display = "none";
-    this.pauseBtn.style.display = "block";
-    this.audio.play();
-
-    this.playListControl.playingMusic(this.getPlayList()[this.index].id);
   }
 
   nextMusic(e) {
+    if(!this.audio.paused){
     if (this.index < this.plyaListLength - 1) {
       this.index += 1;
     } else {
@@ -156,7 +168,8 @@ export class AudioControl {
     this.pauseBtn.style.display = "block";
     this.audio.play();
     
-    this.playListControl.playingMusic(this.getPlayList()[this.index].id);
+    this.playListControl.playingMusic(this.getPlayList()[this.index].key);
+  }
   }
 
   resize(stageWidth, stageHeight) {
@@ -164,26 +177,4 @@ export class AudioControl {
     this.stageHeight = stageHeight;
     this.canvasControl = new CanvasControl(this.ctx);
   }
-
-  //   update() {
-  //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-  //     this.ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-  //     let barWidth = 8.5;
-  //     let barHeight;
-  //     let x = 0;
-  //     let rectCenterY = document.body.clientHeight / 2;
-
-  //     for (let i = 0; i < this.bufferLength; i++) {
-  //       barHeight = this.dataArray[i];
-  //       this.ctx.fillRect(
-  //         x,
-  //         rectCenterY,
-  //         barWidth,
-  //         barHeight / 10 - this.canvas.height / 25
-  //       );
-  //       this.ctx.fillRect(x, rectCenterY, barWidth, barHeight / 4);
-  //       x += barWidth + (this.canvas.clientWidth)/10;
-  //     }
-  //   }
 }

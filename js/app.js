@@ -11,12 +11,19 @@ export class App{
         this.canvas.className = 'mainCanvas';
         this.ctx = this.canvas.getContext('2d');
         document.body.appendChild(this.canvas);
+
+        // this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // this.audio = document.getElementById("audio");
+        // this.analyser = this.audioContext.createAnalyser();
+        // this.source = this.audioContext.createMediaElementSource(this.audio); 
         
         
         this.bgControl = new BgControl();
         this.navControl = new NavControl();
         this.playListControl = new PlayListControl();
         this.audioControl = new AudioControl(playList, this.ctx, this.playListControl);
+        this.playListControl.setAudioControl(this.audioControl);
+
 
         window.addEventListener('resize', this.resize.bind(this), {
             once: false,

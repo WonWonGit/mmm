@@ -606,6 +606,10 @@ a:hover{
     z-index: 999;
 }
 
+.my-playList .ul-playList .li-playList .li-order{
+    width: 100%;
+    display: flex;
+}
 
 .my-playList .ul-playList .li-playList .li-index{
     width: 10%;
@@ -623,13 +627,13 @@ a:hover{
     color: #242424;
 }
 
-.my-playList .ul-playList .li-playList .li-grip{
+/* .my-playList .ul-playList .li-playList .li-grip{
     width: 20px;
     height: 20px;
     transform: translateX(14px);
-}
+} */
 
-.my-playList .ul-playList .li-playList .li-grip.fade-in{
+/* .my-playList .ul-playList .li-playList .li-grip.fade-in{
     animation: fade-in .3s ease-in;
     z-index: 999;
 }
@@ -637,7 +641,7 @@ a:hover{
 .my-playList .ul-playList .li-playList .li-grip.fade-out{
     animation: fade-out .3s forwards;
     z-index: 0;
-}
+} */
 
 /* .my-playList .ul-playList .li-playList .li-delete{
     width: 16px;
@@ -650,9 +654,10 @@ a:hover{
 }
 
 .my-playList .ul-playList .li-playList .li-delete.fade-in{
-    width: 16px;
+    width: 20px;
     height: 20px;
-    transform: translateX(-7px);
+    cursor: pointer;
+    transform: translateX(-17px);
     animation: fade-in .3s ease-in;
     z-index: 999;
 }
