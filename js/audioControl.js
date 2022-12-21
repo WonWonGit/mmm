@@ -115,7 +115,9 @@ export class AudioControl {
         // this.audio.id = this.getPlayList()[this.index].id;
         console.log(this.getPlayList()[this.index].name)
         this.currentSong.innerHTML = this.getPlayList()[this.index].name;
+
         this.audio.currentTime = this.currentTime;
+        
         this.startBtn.style.display = "none";
         this.pauseBtn.style.display = "block";
         this.audio.play();
