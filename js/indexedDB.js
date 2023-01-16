@@ -14,12 +14,13 @@ export class IndexedDB {
       let db;
       const request = indexedDB.open("mmm"); // 3. SampleDB(db) 열기
 
-
       //createIndex로 분리하기
       //src, id, name
       request.onupgradeneeded = (e) => {
         db = e.target.result;
-        const objectStore = db.createObjectStore("mmmAudio", { autoIncrement: true }); // 4. name저장소 만들고
+        const objectStore = db.createObjectStore("mmmAudio", {
+          autoIncrement: true,
+        }); // 4. name저장소 만들고
         request.onerror = (e) => alert("failed");
         request.onsuccess = (e) => (db = request.result); // 5. 성공시 db에 result를 저장
       };
@@ -46,13 +47,13 @@ export class IndexedDB {
         const transaction = db
           .transaction(["mmmAudio"], "readwrite")
           .objectStore("mmmAudio");
-  
-          audios.forEach((audio) => {
-            transaction.add(audio);
-          });
-          resolve(200)
+
+        audios.forEach((audio) => {
+          transaction.add(audio);
+        });
+        resolve(200);
       };
-    }).then(result => result);
+    }).then((result) => result);
   }
 
   async getAllIndexedPlayList() {
@@ -70,18 +71,22 @@ export class IndexedDB {
         const objStore = transaction.objectStore("mmmAudio"); // 2. name 저장소 접근
         const cursorRequest = objStore.openCursor();
         cursorRequest.onsuccess = (e) => {
-        var cursor = e.target.result;
+          var cursor = e.target.result;
 
           if (cursor) {
             const value = objStore.get(cursor.key); // 3. 커서를 사용해 데이터 접근
             value.onsuccess = (e) => {
-              allPalyListArr.push({ ...e.target.result, id: e.target.result.id, key:cursor.key });
+              allPalyListArr.push({
+                ...e.target.result,
+                id: e.target.result.id,
+                key: cursor.key,
+              });
               // this.audio.src = e.target.result.src;
             };
             cursor.continue(); // 4. cursor로 순회
           } else {
-              this.setAllPlayList(allPalyListArr);
-              resolve(this.getAllPlayList());
+            this.setAllPlayList(allPalyListArr);
+            resolve(this.getAllPlayList());
           }
         };
       };
@@ -102,15 +107,16 @@ export class IndexedDB {
         const objStore = transaction.objectStore("mmmAudio"); // 2. name 저장소 접근
         const objStoreRequest = objStore.delete(parseInt(key)); // 3. 삭제하기
         objStoreRequest.onsuccess = (e) => {
-          console.log('delete DONE!!');
+          console.log("delete DONE!!");
           resolve(200);
         };
       };
-    }).then(result => {return result});
+    }).then((result) => {
+      return result;
+    });
   }
 
-  updatePlayListId(test){
-    console.log(test);
+  updatePlayListId(palyList) {
     return new Promise((resolve) => {
       const request = window.indexedDB.open("mmm");
       request.onerror = (e) => console.log(e.target.errorCode);
@@ -125,50 +131,21 @@ export class IndexedDB {
         objStore.openCursor().onsuccess = (e) => {
           const cursor = e.target.result;
 
-          if(cursor){
-            // console.log(cursor, cursor.id);
-            console.log(test.key);
-            if(cursor.key === Number(test.key)){
-              console.log(cursor.value.id, test.id);
-              if(cursor.value.id !== Number(test.id)){
-              const updateData = cursor.value;
-              console.log(updateData, test.id);
-              updateData.id = Number(test.id);
-  
-              const request = cursor.update(updateData);
+          if (cursor) {
+            if (cursor.key === Number(palyList.key)) {
+              if (cursor.value.id !== Number(palyList.id)) {
+                const updateData = cursor.value;
+                updateData.id = Number(palyList.id);
+
+                const request = cursor.update(updateData);
               }
             }
             cursor.continue();
-          }else{
-            resolve(200)
+          } else {
+            resolve(200);
           }
-        }
-
-      }
-
-    })
-    
-    
-      // }
-      // const objectStoreKeyRequest = objStore.get(key);
-
-      // objectStoreKeyRequest.onsuccess = (e) => {
-      //   console.log(e.target.result, newId);
-
-        // const objStoreRequest = objStore.delete(parseInt(key)); // 3. 삭제하기
-        // objStoreRequest.onsuccess = (e) => {
-        //   console.log('delete DONE!!');
-        //   resolve(200);
-        // };
-
-
-
-
-      }
-      
-      
-      // console.log(value);
-
-    
-  
+        };
+      };
+    });
+  }
 }
